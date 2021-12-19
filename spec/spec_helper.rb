@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require "activerecord/mti"
+
+require "active_record/mti"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
