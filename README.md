@@ -1,8 +1,8 @@
 # Activerecord::Mti
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/activerecord/mti`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
+
+
 
 ## Installation
 
@@ -20,9 +20,97 @@ Or install it yourself as:
 
     $ gem install activerecord-mti
 
+## Setup
+
+### Simple migration
+ ```ruby
+ class MTIExampleMigration < ActiveRecord::Migration[5.2]
+   create_table :bases do |t|
+     t.references :companion, polymorphic: true
+ 
+     t.timestamps
+   end
+ 
+   create_table :companions do |t|
+     t.string  :string_field_from_companion
+     t.integer :int_field_from_companion
+ 
+     t.timestamps
+   end
+ 
+   create_table :other_companions do |t|
+     t.string :field_a
+     t.string :field_b
+ 
+     t.timestamps
+   end
+ end
+```
+
+
+### Models
+
+#### Model for the agregated tables
+```ruby
+ class ApplicationRecord < ActiveRecord::Base
+   self.abstract_class = true
+ end
+
+
+ class BaseCompanion < ApplicationRecord
+   self.abstract_class = true
+
+   has_one :base_record, as: :companion
+ end
+
+
+ class Companion < BaseCompanion
+ end
+
+
+ class OtherCompanion < BaseCompanion
+ end
+
+
+ class Base < ApplicationRecord
+   include ActiveRecord::MTI
+
+   set_mti_base :companion
+ end
+
+
+ class BaseWithCompanion < Base
+   set_mti_companion :int_field_from_companion,
+                     :string_field_from_companion,
+                     to:         :companion,
+                     class_name: 'Companion'
+ end
+
+
+ class BaseWithOtherCompanion < Base
+   set_mti_companion :field_a,
+                     :field_b,
+                     to:         :companion,
+                     class_name: 'OtherCompanion'
+ end
+```
+
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+ base_with_companion = BaseWithCompanion.create string_field_from_companion: 'some_string'
+ base_with_companion.companion_type # 'BaseWithCompanion'
+ base_with_companion.string_field_from_companion # some_string
+
+ base_with_companion.string_field_from_companion = 'other_value'
+ base_with_companion.changed? # true
+
+ base_with_companion.save!
+ base_with_companion.changed? # false
+
+ base_with_companion.destroy # also destroys the associated CompanionOne record
+```
+
 
 ## Development
 
@@ -32,7 +120,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/activerecord-mti.
+Bug reports and pull requests are welcome on GitHub at https://github.com/klotz-dabril/activerecord-mti.
 
 ## License
 
