@@ -1,4 +1,4 @@
-# Activerecord::Mti
+# Activerecord::MTI
 
 
 
