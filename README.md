@@ -125,3 +125,11 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/klotz-
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+
+
+
+## Acknowledgment
+
+Inspired by [Implementing multiple table inheritance in Rails](https://belighted.com/blog/implementing-multiple-table-inheritance-in-rails/) by Dominique L.
+
