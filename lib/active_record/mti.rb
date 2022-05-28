@@ -13,7 +13,7 @@ module ActiveRecord
       end
 
 
-      def set_mti_companion(*attributes, to:, class_name:)
+      def Set_mti_companion(*attributes, to:, class_name:)
         belongs_to to,
                    class_name: class_name,
                    dependent:  :destroy,
